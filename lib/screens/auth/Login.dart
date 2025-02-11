@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +41,12 @@ class Login extends StatelessWidget {
                           onPressed: () {
                             print('Login button pressed');
                           },
-                          child: Text('Login'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
                             foregroundColor: Colors.white,
                             minimumSize: Size(double.infinity, 40),
                           ),
+                          child: Text('Login'),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 20), // Different way to add padding

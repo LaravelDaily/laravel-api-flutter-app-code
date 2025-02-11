@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CategoriesList extends StatefulWidget {
+  const CategoriesList({super.key});
+
   @override
   CategoriesListState createState() => CategoriesListState();
 }
