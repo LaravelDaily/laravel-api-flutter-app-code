@@ -4,8 +4,9 @@ import 'package:laravel_api_flutter_app/models/category.dart';
 
 class CategoryEdit extends StatefulWidget {
   final Category category;
+  final Function categoryCallback;
 
-  const CategoryEdit(this.category, {super.key});
+  const CategoryEdit(this.category, this.categoryCallback, {super.key});
 
   @override
   CategoryEditState createState() => CategoryEditState();
@@ -24,14 +25,11 @@ class CategoryEditState extends State<CategoryEdit> {
       return;
     }
 
-    apiService
-        .saveCategory(widget.category.id, categoryNameController.text)
-        .then((dynamic response) => Navigator.pop(context))
-        .catchError((error) {
-      setState(() {
-        errorMessage = 'Failed to update category';
-      });
-    });
+    widget.category.name = categoryNameController.text;
+
+    await widget.categoryCallback(widget.category);
+
+    Navigator.pop(context);
   }
 
   @override

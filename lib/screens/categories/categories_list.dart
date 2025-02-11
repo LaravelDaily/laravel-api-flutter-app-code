@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_api_flutter_app/services/api.dart';
 import 'package:laravel_api_flutter_app/models/category.dart';
 import 'package:laravel_api_flutter_app/widgets/category_edit.dart';
+import 'package:laravel_api_flutter_app/providers/category_provider.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({super.key});
@@ -11,48 +12,44 @@ class CategoriesList extends StatefulWidget {
 }
 
 class CategoriesListState extends State<CategoriesList> {
-  Future<List<Category>>? futureCategories;
-  ApiService apiService = ApiService();
-
   @override
   void initState() {
     super.initState();
-    futureCategories = apiService.fetchCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Categories List'),
-      ),
-      body: FutureBuilder<List<Category>>(
-          future: futureCategories,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    Category category = snapshot.data![index];
-                    return ListTile(
-                      title: Text(category.name),
-                      trailing: IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (context) {
-                                  return CategoryEdit(category);
-                                });
-                          },
-                          icon: Icon(Icons.edit)),
+    return Consumer<CategoryProvider>(
+      builder: (context, provider, child) {
+        List<Category> categories = provider.categories;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Categories List'),
+          ),
+          body: ListView.builder(
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              Category category = categories[index];
+              return ListTile(
+                title: Text(category.name),
+                trailing: IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return CategoryEdit(category, provider.updateCategory);
+                      },
                     );
-                  });
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            return CircularProgressIndicator();
-          }),
+                  },
+                  icon: Icon(Icons.edit),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
