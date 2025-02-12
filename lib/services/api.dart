@@ -106,4 +106,36 @@ class ApiService {
 
     return response.body;
   }
+
+  Future<String> login(
+      String email, String password, String device_name) async {
+    String url = '$baseUrl/api/auth/login';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+        'device_name': device_name,
+      }),
+    );
+
+    if (response.statusCode == 422) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final Map<String, dynamic> errors = data['errors'];
+      String message = '';
+      errors.forEach((key, value) {
+        value.forEach((error) {
+          message += '$error\n';
+        });
+      });
+
+      throw Exception(message);
+    }
+
+    return response.body;
+  }
 }

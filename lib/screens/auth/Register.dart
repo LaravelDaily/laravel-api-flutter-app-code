@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_api_flutter_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:device_info/device_info.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -18,20 +21,49 @@ class RegisterState extends State<Register> {
 
   String errorMessage = '';
 
+  late String deviceName;
+
+  @override
+  void initState() {
+    super.initState();
+    getDeviceName();
+  }
+
+  Future<void> getDeviceName() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        setState(() {
+          deviceName = androidInfo.model;
+        });
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        setState(() {
+          deviceName = iosInfo.name;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        deviceName = 'Could not retrieve device name';
+      });
+    }
+  }
+
   Future<void> submit() async {
     final form = _formKey.currentState;
     if (!form!.validate()) {
       return;
     }
     final AuthProvider provider =
-        Provider.of<AuthProvider>(context, listen: false);
+    Provider.of<AuthProvider>(context, listen: false);
     try {
       String token = await provider.register(
           nameController.text,
           emailController.text,
           passwordController.text,
           confirmPasswordController.text,
-          'Some device name');
+          deviceName);
       Navigator.pop(context);
     } catch (Exception) {
       setState(() {
@@ -47,7 +79,9 @@ class RegisterState extends State<Register> {
           title: Text('Register'),
         ),
         body: Container(
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
