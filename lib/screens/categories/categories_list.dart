@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_api_flutter_app/models/category.dart';
 import 'package:laravel_api_flutter_app/widgets/category_edit.dart';
+import 'package:laravel_api_flutter_app/widgets/category_add.dart';
 import 'package:laravel_api_flutter_app/providers/category_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -82,6 +83,18 @@ class CategoriesListState extends State<CategoriesList> {
                 ),
               );
             },
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return CategoryAdd(provider.addCategory);
+                },
+              );
+            },
+            child: Icon(Icons.add),
           ),
         );
       },

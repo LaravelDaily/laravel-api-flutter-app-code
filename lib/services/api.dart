@@ -22,6 +22,26 @@ class ApiService {
     return categories.map((category) => Category.fromJson(category)).toList();
   }
 
+  Future addCategory(String name) async {
+    String url = '$baseUrl/api/categories';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': name,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to create category');
+    }
+
+    final Map<String, dynamic> data = json.decode(response.body);
+    return Category.fromJson(data['data']);
+  }
+
   Future saveCategory(Category category) async {
     String url = '$baseUrl/api/categories/${category.id}';
     final http.Response response = await http.put(
