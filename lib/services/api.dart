@@ -41,4 +41,15 @@ class ApiService {
     final Map<String, dynamic> data = json.decode(response.body);
     return Category.fromJson(data['data']);
   }
+
+  Future<void> deleteCategory(id) async {
+    String url = '$baseUrl/api/categories/$id';
+    final http.Response response = await http.delete(
+      Uri.parse(url),
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete category');
+    }
+  }
 }
