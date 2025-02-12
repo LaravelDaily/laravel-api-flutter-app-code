@@ -15,7 +15,6 @@ class CategoryEdit extends StatefulWidget {
 class CategoryEditState extends State<CategoryEdit> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final categoryNameController = TextEditingController();
-  ApiService apiService = ApiService();
   String errorMessage = '';
 
   Future saveCategory(context) async {

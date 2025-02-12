@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_api_flutter_app/models/category.dart';
 import 'package:laravel_api_flutter_app/services/api.dart';
+import 'package:laravel_api_flutter_app/providers/auth_provider.dart';
 
 class CategoryProvider extends ChangeNotifier {
   List<Category> categories = [];
   late ApiService apiService;
+  late AuthProvider authProvider;
 
-  CategoryProvider() {
-    apiService = ApiService();
+  CategoryProvider(AuthProvider authProvider) {
+    this.authProvider = authProvider;
+    apiService = ApiService(authProvider.token);
     init();
   }
 

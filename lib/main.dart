@@ -22,14 +22,12 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
               providers: [
                 ChangeNotifierProvider<CategoryProvider>(
-                    create: (context) => CategoryProvider()),
-                ChangeNotifierProvider<AuthProvider>(
-                    create: (context) => AuthProvider()),
+                    create: (context) => CategoryProvider(authProvider)),
               ],
               child: MaterialApp(title: 'Welcome to Flutter', routes: {
                 '/': (context) {
                   final authProvider = Provider.of<AuthProvider>(context);
-                  return authProvider.isAuthenticated ? Home() : Login();
+                  return authProvider.isAuthenticated ? CategoriesList() : Login();
                 },
                 '/login': (context) => Login(),
                 '/register': (context) => Register(),
