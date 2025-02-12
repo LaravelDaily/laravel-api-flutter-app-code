@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:laravel_api_flutter_app/models/category.dart';
 
 class ApiService {
-  late String token;
+  late String? token;
 
   ApiService(String token) {
     this.token = token;

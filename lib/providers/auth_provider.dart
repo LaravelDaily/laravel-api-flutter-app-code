@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:laravel_api_flutter_app/services/api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool isAuthenticated = false;
   late String token;
   ApiService apiService = ApiService('');
+  final storage = new FlutterSecureStorage();
 
-  AuthProvider();
+  AuthProvider() {
+    getToken().then((value) {
+      if (value != null) {
+        token = value;
+        isAuthenticated = true;
+        notifyListeners();
+      }
+    });
+  }
 
   Future<void> register(String name, String email, String password,
       String password_confirmation, String device_name) async {
     token = await apiService.register(
         name, email, password, password_confirmation, device_name);
+    setToken(token);
     isAuthenticated = true;
     notifyListeners();
   }
 
   Future<void> login(String email, String password, String device_name) async {
     token = await apiService.login(email, password, device_name);
+    setToken(token);
     isAuthenticated = true;
     notifyListeners();
   }
@@ -25,6 +37,22 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logout() async {
     token = '';
     isAuthenticated = false;
+    await storage.delete(key: 'token');
     notifyListeners();
+  }
+
+  Future<String?> getToken() {
+    Future<String?> token =  storage.read(key: 'token');
+    if(token != null) {
+      return Future.value(token);
+    }
+
+    return Future.value('');
+  }
+
+  Future<String?> setToken(String token) async {
+    await storage.write(key: 'token', value: token);
+
+    return token;
   }
 }
