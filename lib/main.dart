@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
               child: MaterialApp(title: 'Welcome to Flutter', routes: {
                 '/': (context) {
                   final authProvider = Provider.of<AuthProvider>(context);
-                  return authProvider.isAuthenticated ? CategoriesList() : Login();
+                  return authProvider.isAuthenticated ? Home() : Login();
                 },
                 '/login': (context) => Login(),
                 '/register': (context) => Register(),

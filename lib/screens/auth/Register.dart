@@ -3,7 +3,7 @@ import 'package:laravel_api_flutter_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
