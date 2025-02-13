@@ -6,11 +6,11 @@ class AuthProvider extends ChangeNotifier {
   bool isAuthenticated = false;
   late String token;
   ApiService apiService = ApiService('');
-  final storage = new FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
 
   AuthProvider() {
     getToken().then((value) {
-      if (value != null) {
+      if (value.isNotEmpty) {
         token = value;
         isAuthenticated = true;
         notifyListeners();
@@ -19,16 +19,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> register(String name, String email, String password,
-      String password_confirmation, String device_name) async {
+      String passwordConfirmation, String deviceName) async {
     token = await apiService.register(
-        name, email, password, password_confirmation, device_name);
+        name, email, password, passwordConfirmation, deviceName);
     setToken(token);
     isAuthenticated = true;
     notifyListeners();
   }
 
-  Future<void> login(String email, String password, String device_name) async {
-    token = await apiService.login(email, password, device_name);
+  Future<void> login(String email, String password, String deviceName) async {
+    token = await apiService.login(email, password, deviceName);
     setToken(token);
     isAuthenticated = true;
     notifyListeners();
@@ -45,7 +45,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       String? token = await storage.read(key: 'token');
       if (token != null) {
-        return token ?? '';
+        return token;
       }
       
       return '';

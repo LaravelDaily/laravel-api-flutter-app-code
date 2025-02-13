@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:laravel_api_flutter_app/providers/transaction_provider.dart';
 
 class Transactions extends StatefulWidget {
+  const Transactions({super.key});
+
   @override
-  _TransactionsState createState() => _TransactionsState();
+  TransactionState createState() => TransactionState();
 }
 
-class _TransactionsState extends State<Transactions> {
+class TransactionState extends State<Transactions> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
@@ -25,7 +27,7 @@ class _TransactionsState extends State<Transactions> {
         itemBuilder: (context, index) {
           Transaction transaction = transactions[index];
           return ListTile(
-            title: Text('\$' + transaction.amount),
+            title: Text('\$${transaction.amount}'),
             subtitle: Text(transaction.categoryName),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -61,7 +63,9 @@ class _TransactionsState extends State<Transactions> {
                             TextButton(
                                 child: Text("Delete"),
                                 onPressed: () => deleteTransaction(
-                                    provider.deleteTransaction, transaction, context)),
+                                    provider.deleteTransaction,
+                                    transaction,
+                                    context)),
                           ],
                         );
                       });
@@ -71,7 +75,7 @@ class _TransactionsState extends State<Transactions> {
           );
         },
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
                 isScrollControlled: true,
@@ -84,7 +88,8 @@ class _TransactionsState extends State<Transactions> {
     );
   }
 
-  Future deleteTransaction(Function callback, Transaction transaction, context) async {
+  Future deleteTransaction(
+      Function callback, Transaction transaction, context) async {
     await callback(transaction);
     Navigator.pop(context);
   }

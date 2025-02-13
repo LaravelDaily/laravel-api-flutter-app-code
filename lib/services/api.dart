@@ -7,7 +7,7 @@ class ApiService {
   late String? token;
 
   ApiService(String? token) {
-    this.token = token;
+    token = token;
     // TODO: Fix an issue with token expiration. Once token expires, the user should be logged out.
   }
 
@@ -90,7 +90,7 @@ class ApiService {
   }
 
   Future<String> register(String name, String email, String password,
-      String password_confirm, String device_name) async {
+      String passwordConfirm, String deviceName) async {
     String url = '$baseUrl/api/auth/register';
     final http.Response response = await http.post(
       Uri.parse(url),
@@ -102,8 +102,8 @@ class ApiService {
         'name': name,
         'email': email,
         'password': password,
-        'password_confirmation': password_confirm,
-        'device_name': device_name,
+        'passwordConfirmation': passwordConfirm,
+        'deviceName': deviceName,
       }),
     );
 
@@ -124,7 +124,7 @@ class ApiService {
   }
 
   Future<String> login(
-      String email, String password, String device_name) async {
+      String email, String password, String deviceName) async {
     String url = '$baseUrl/api/auth/login';
     final http.Response response = await http.post(
       Uri.parse(url),
@@ -135,7 +135,7 @@ class ApiService {
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
-        'device_name': device_name,
+        'deviceName': deviceName,
       }),
     );
 
@@ -157,7 +157,7 @@ class ApiService {
 
   Future<List<Transaction>> fetchTransactions() async {
     http.Response response = await http.get(
-      Uri.parse(baseUrl + '/api/transactions'),
+      Uri.parse('$baseUrl/api/transactions'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ class ApiService {
 
   Future<Transaction> addTransaction(
       String amount, String category, String description, String date) async {
-    String uri = baseUrl + '/api/transactions';
+    String uri = '$baseUrl/api/transactions';
     http.Response response = await http.post(Uri.parse(uri),
         headers: {
           'Accept': 'application/json',
@@ -200,7 +200,7 @@ class ApiService {
   }
 
   Future<Transaction> updateTransaction(Transaction transaction) async {
-    String uri = baseUrl + '/api/transactions/' + transaction.id.toString();
+    String uri = '$baseUrl/api/transactions/${transaction.id}';
     http.Response response = await http.put(Uri.parse(uri),
         headers: {
           'Accept': 'application/json',
@@ -221,7 +221,7 @@ class ApiService {
   }
 
   Future<void> deleteTransaction(id) async {
-    String uri = baseUrl + '/api/transactions/' + id.toString();
+    String uri = '$baseUrl/api/transactions/$id';
     http.Response response = await http.delete(
       Uri.parse(uri),
       headers: {

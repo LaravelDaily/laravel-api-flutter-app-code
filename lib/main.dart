@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:laravel_api_flutter_app/Screens/Auth/Login.dart';
-import 'package:laravel_api_flutter_app/Screens/Auth/Register.dart';
+import 'package:laravel_api_flutter_app/Screens/Auth/login.dart';
+import 'package:laravel_api_flutter_app/Screens/Auth/register.dart';
 import 'package:laravel_api_flutter_app/screens/categories/categories_list.dart';
 import 'package:laravel_api_flutter_app/screens/home.dart';
 import 'package:laravel_api_flutter_app/providers/category_provider.dart';

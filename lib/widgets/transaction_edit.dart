@@ -10,14 +10,13 @@ class TransactionEdit extends StatefulWidget {
   final Transaction transaction;
   final Function transactionCallback;
 
-  TransactionEdit(this.transaction, this.transactionCallback, {Key? key})
-      : super(key: key);
+  const TransactionEdit(this.transaction, this.transactionCallback, {super.key});
 
   @override
-  _TransactionEditState createState() => _TransactionEditState();
+  TransactionEditState createState() => TransactionEditState();
 }
 
-class _TransactionEditState extends State<TransactionEdit> {
+class TransactionEditState extends State<TransactionEdit> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final transactionAmountController = TextEditingController();
   final transactionCategoryController = TextEditingController();
@@ -66,6 +65,7 @@ class _TransactionEditState extends State<TransactionEdit> {
                   if (newValue == null) {
                     return 'Invalid amount format';
                   }
+                  return null;
                 },
                 onChanged: (text) => setState(() => errorMessage = ''),
               ),
@@ -117,11 +117,11 @@ class _TransactionEditState extends State<TransactionEdit> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     ElevatedButton(
-                      child: Text('Save'),
                       onPressed: () => saveTransaction(context),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                           foregroundColor: Colors.white),
+                      child: Text('Save'),
                     ),
                   ]),
               Text(errorMessage, style: TextStyle(color: Colors.red))
@@ -134,11 +134,12 @@ class _TransactionEditState extends State<TransactionEdit> {
         initialDate: DateTime.now(),
         firstDate: DateTime(DateTime.now().year - 5),
         lastDate: DateTime(DateTime.now().year + 5));
-    if (picked != null)
+    if (picked != null) {
       setState(() {
         transactionDateController.text =
             DateFormat('MM/dd/yyyy').format(picked);
       });
+    }
   }
 
   Widget buildCategoriesDropdown() {
@@ -173,6 +174,7 @@ class _TransactionEditState extends State<TransactionEdit> {
             if (value == null) {
               return 'Please select category';
             }
+            return null;
           },
         );
       },
