@@ -8,9 +8,9 @@ class CategoryProvider extends ChangeNotifier {
   late ApiService apiService;
   late AuthProvider authProvider;
 
-  CategoryProvider(AuthProvider authProvider) {
-    authProvider = authProvider;
-    apiService = ApiService(authProvider.token);
+  CategoryProvider(AuthProvider auth) {
+    authProvider = auth;
+    apiService = ApiService(authProvider.token, auth);
     init();
   }
 

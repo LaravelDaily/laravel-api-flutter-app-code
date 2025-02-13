@@ -2,16 +2,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:laravel_api_flutter_app/models/category.dart';
 import 'package:laravel_api_flutter_app/models/transaction.dart';
+import 'package:laravel_api_flutter_app/providers/auth_provider.dart';
 
 class ApiService {
   late String? token;
+  late AuthProvider? authProvider;
 
-  ApiService(String? token) {
-    token = token;
-    // TODO: Fix an issue with token expiration. Once token expires, the user should be logged out.
+  ApiService(String? apiToken, AuthProvider? auth) {
+    token = apiToken;
+    authProvider = auth;
   }
 
   final String baseUrl = 'https://a70d-78-58-236-130.ngrok-free.app';
+
+  void logout() {
+    authProvider?.logout();
+  }
 
   Future<List<Category>> fetchCategories() async {
     final http.Response response = await http
@@ -20,6 +26,11 @@ class ApiService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     });
+
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
 
     final Map<String, dynamic> data = json.decode(response.body);
 
@@ -46,6 +57,11 @@ class ApiService {
       }),
     );
 
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     if (response.statusCode != 201) {
       throw Exception('Failed to create category');
     }
@@ -68,6 +84,11 @@ class ApiService {
       }),
     );
 
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     if (response.statusCode != 200) {
       throw Exception('Failed to update category');
     }
@@ -83,6 +104,11 @@ class ApiService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     });
+
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
 
     if (response.statusCode != 204) {
       throw Exception('Failed to delete category');
@@ -103,7 +129,7 @@ class ApiService {
         'email': email,
         'password': password,
         'passwordConfirmation': passwordConfirm,
-        'deviceName': deviceName,
+        'device_name': deviceName,
       }),
     );
 
@@ -135,7 +161,7 @@ class ApiService {
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
-        'deviceName': deviceName,
+        'device_name': deviceName,
       }),
     );
 
@@ -165,6 +191,11 @@ class ApiService {
       },
     );
 
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     final Map<String, dynamic> data = json.decode(response.body);
 
     if (!data.containsKey('data') || data['data'] is! List) {
@@ -193,6 +224,12 @@ class ApiService {
           'description': description,
           'transaction_date': date
         }));
+
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     if (response.statusCode != 201) {
       throw Exception('Error happened on create');
     }
@@ -213,10 +250,17 @@ class ApiService {
           'description': transaction.description,
           'transaction_date': transaction.transactionDate
         }));
+
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     if (response.statusCode != 200) {
       print(response.body);
       throw Exception('Error happened on update');
     }
+
     return Transaction.fromJson(jsonDecode(response.body)['data']);
   }
 
@@ -230,6 +274,12 @@ class ApiService {
         'Authorization': 'Bearer $token'
       },
     );
+
+    if (response.statusCode == 401) {
+      logout();
+      throw Exception('Unauthorized');
+    }
+
     if (response.statusCode != 204) {
       throw Exception('Error happened on delete');
     }

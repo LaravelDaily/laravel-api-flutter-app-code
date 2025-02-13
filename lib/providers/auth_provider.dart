@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthProvider extends ChangeNotifier {
   bool isAuthenticated = false;
   late String token;
-  ApiService apiService = ApiService('');
+  ApiService apiService = ApiService('', null);
   final storage = FlutterSecureStorage();
 
   AuthProvider() {

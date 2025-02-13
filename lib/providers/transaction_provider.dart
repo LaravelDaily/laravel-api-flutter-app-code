@@ -8,13 +8,13 @@ class TransactionProvider extends ChangeNotifier {
   late ApiService apiService;
   late AuthProvider authProvider;
 
-  TransactionProvider(AuthProvider authProvider) {
-    authProvider = authProvider;
+  TransactionProvider(AuthProvider auth) {
+    authProvider = auth;
     init();
   }
 
   Future init() async {
-    apiService = ApiService(await authProvider.getToken());
+    apiService = ApiService(await authProvider.getToken(), authProvider);
     transactions = await apiService.fetchTransactions();
     notifyListeners();
   }
