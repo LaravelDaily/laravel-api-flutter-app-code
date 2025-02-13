@@ -41,16 +41,20 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> getToken() {
-    Future<String?> token =  storage.read(key: 'token');
-    if(token != null) {
-      return Future.value(token);
+  Future<String> getToken() async {
+    try {
+      String? token = await storage.read(key: 'token');
+      if (token != null) {
+        return token ?? '';
+      }
+      
+      return '';
+    } catch (e) {
+      return '';
     }
-
-    return Future.value('');
   }
 
-  Future<String?> setToken(String token) async {
+  Future<String> setToken(String token) async {
     await storage.write(key: 'token', value: token);
 
     return token;
